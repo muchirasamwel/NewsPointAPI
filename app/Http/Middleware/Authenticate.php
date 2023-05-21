@@ -2,7 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpFoundation\Response;
 
 class Authenticate extends Middleware
 {
@@ -12,10 +16,19 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    protected function redirectTo($request)
+    protected function unauthenticated($request, array $guards): response
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        throw new HttpResponseException(Http::error('Unauthorized', null, Response::HTTP_UNAUTHORIZED));
+    }
+
+    public function handle($request, Closure $next, ...$guards): mixed
+    {
+        if ($jwt = $request->cookie('_token')) {
+            $request->headers->set('Authorization', 'Bearer ' . $jwt);
         }
+
+        $this->authenticate($request, $guards);
+
+        return $next($request);
     }
 }
