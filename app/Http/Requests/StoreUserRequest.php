@@ -5,7 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class StoreUserRequest extends FormRequest
 {
@@ -27,7 +29,7 @@ class StoreUserRequest extends FormRequest
     {
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(
-            response()->json(['message' => 'error', 'data' => $errors], 422)
+            Http::error(null, $errors, Response::HTTP_UNPROCESSABLE_ENTITY)
         );
     }
 }

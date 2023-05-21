@@ -9,19 +9,26 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
-class UpdateUserRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
-            'id' => 'required',
+            'email' => 'required|email|max:30',
+            'password' => 'required|min:8'
         ];
     }
+
     protected function failedValidation(Validator $validator): HttpResponseException
     {
         $errors = (new ValidationException($validator))->errors();
         throw new HttpResponseException(
-            Http::error(null,$errors, Response::HTTP_UNPROCESSABLE_ENTITY)
+            Http::error(null, $errors, Response::HTTP_UNPROCESSABLE_ENTITY)
         );
     }
 }

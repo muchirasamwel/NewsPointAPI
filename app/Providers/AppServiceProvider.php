@@ -31,5 +31,12 @@ class AppServiceProvider extends ServiceProvider
                 "data" => $data
             ], $status);
         });
+
+        Http::macro('error', function ($message, $data = null, $status = Response::HTTP_BAD_REQUEST) {
+            return response([
+                "message" => $message ?? 'error',
+                "data" => $data
+            ], $status);
+        });
     }
 }
