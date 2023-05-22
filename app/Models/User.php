@@ -37,6 +37,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public $casts = [
+        'user_preferences' => 'array'
+    ];
+
     public function setPasswordAttribute($password)
     {
         $this->attributes['password'] = Hash::make($password);
