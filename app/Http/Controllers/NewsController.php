@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\GuardianNewsService;
 use App\Services\NewsApiNewsService;
+use App\Services\NyTimesNewsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -12,12 +13,15 @@ class NewsController extends Controller
     public function collectNews(Request $request)
     {
         $search = $request->get('search');
+
         $guardianNews = $this->getGuardianNews($search);
         $newsAPINews = $this->getNewsApiNews($search);
+        $nYTimesNews = $this->getNyTimesNews($search);
 
         return Http::success([
             "guardianNews" => $guardianNews,
-            'newsAPINews' => $newsAPINews
+            'newsAPINews' => $newsAPINews,
+            'nYTimesNews' => $nYTimesNews
         ]);
     }
 
@@ -33,5 +37,12 @@ class NewsController extends Controller
         $newsAPINewsService = new NewsApiNewsService($search);
 
         return $newsAPINewsService->transformNews();
+    }
+
+    private function getNyTimesNews(String $search): array
+    {
+        $nYTimesNewsService = new NyTimesNewsService($search);
+
+        return $nYTimesNewsService->transformNews();
     }
 }
