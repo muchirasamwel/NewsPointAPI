@@ -14,9 +14,9 @@ class NewsController extends Controller
     {
         $search = $request->get('search');
 
-        $guardianNews = $this->getGuardianNews($search);
-        $newsAPINews = $this->getNewsApiNews($search);
-        $nYTimesNews = $this->getNyTimesNews($search);
+        $guardianNews = $this->getGuardianNews($search ?? '');
+        $newsAPINews = $this->getNewsApiNews($search ?? 'news');
+        $nYTimesNews = $this->getNyTimesNews($search ?? '');
 
         return Http::success([
             "guardianNews" => $guardianNews,
