@@ -20,7 +20,7 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
             'api-key' => env('GUARDIAN_API_KEY'),
             'q' => $search,
             'page-size' => '10',
-            "sort-by" => 'relevance',
+            "order-by" => 'newest',
             'query-fields' => 'headline,body',
             'show-fields' => 'headline,thumbnail,body',
             'show-tags' => 'contributor'
@@ -34,11 +34,11 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
         $news = collect($results)->map(fn ($result) => [
             "title" => $result['fields']['headline'],
             "body" => $result['fields']['body'],
-            "thumbnail" => $result['fields']['thumbnail'],
+            "thumbnail" => $result['fields'] && array_key_exists('thumbnail', $result['fields']) ? $result['fields']['thumbnail'] : null,
             "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
             "date" => $result['webPublicationDate'],
             "category" => $result['sectionName'],
-            "source" => "The Guardian"
+            "source" => "Guardian News"
         ]);
         return $news->toArray();
     }
