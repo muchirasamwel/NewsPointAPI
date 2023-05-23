@@ -33,7 +33,7 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
             "title" => $result['fields']['headline'],
             "body" => $result['fields']['body'],
             "thumbnail" => $result['fields']['thumbnail'],
-            "author" => $result['tags'][0]['webTitle'],
+            "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
             "date" => $result['webPublicationDate'],
             "category" => $result['sectionName'],
             "source" => "The Guardian"
