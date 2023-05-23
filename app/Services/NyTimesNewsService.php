@@ -14,6 +14,7 @@ class NyTimesNewsService extends NewsService implements NewsTransformInterface
         parent::__construct("https://api.nytimes.com/svc/search/v2/articlesearch.json", [
             'api-key' => env('NYTIMES_API_KEY'),
             'q' => $search,
+            'sort' => 'relevance',
             'page-size' => '10',
         ]);
         $this->search = $search;

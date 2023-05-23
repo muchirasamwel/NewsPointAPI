@@ -19,6 +19,8 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
         parent::__construct("https://content.guardianapis.com/search", [
             'api-key' => env('GUARDIAN_API_KEY'),
             'q' => $search,
+            'page-size' => '10',
+            "sort-by" => 'relevance',
             'query-fields' => 'headline,body',
             'show-fields' => 'headline,thumbnail,body',
             'show-tags' => 'contributor'
