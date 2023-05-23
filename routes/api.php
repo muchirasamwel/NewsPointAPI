@@ -19,12 +19,15 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/register', [UserController::class, 'store']);
 
-Route::post('/news', [NewsController::class, 'collectNews']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    // User APIs
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users', [UserController::class, 'update']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::put('/user-preferences', [UserPreferencesController::class, 'update']);
+
+    // News API
+    Route::post('/news', [NewsController::class, 'collectNews']);
 });
