@@ -14,8 +14,8 @@ use GuzzleHttp\Client;
 
 class NewsService implements NewsFetchInterface
 {
-    private $URL;
-    private $query;
+    private String $URL;
+    private array $query;
     public function __construct(String $URL, array $query)
     {
         $this->URL = $URL;

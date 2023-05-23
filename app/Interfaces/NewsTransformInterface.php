@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface NewsTransformInterface
 {
-    public function transformNews(String $search): array;
+    public function transformNews(): array;
 }

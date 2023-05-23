@@ -20,14 +20,8 @@ class NewsController extends Controller
 
     private function getGuardianNews(String $search): array
     {
-        $guardianNewsService = new GuardianNewsService("https://content.guardianapis.com/search", [
-            'api-key' => env('GUARDIAN_API_KEY'),
-            'q' => $search,
-            'query-fields' => 'body,thumbnail',
-            'show-fields' => 'starRating,headline,thumbnail,body,short-url',
-            'show-tags' => 'contributor'
-        ]);
+        $guardianNewsService = new GuardianNewsService($search);
 
-        return $guardianNewsService->transformNews($search ?? "");
+        return $guardianNewsService->transformNews();
     }
 }

@@ -11,9 +11,23 @@ use App\Interfaces\NewsTransformInterface;
 
 class GuardianNewsService extends NewsService implements NewsTransformInterface
 {
-    public function transformNews(String $search): array
+
+    private String $search;
+
+    public function __construct(String $search)
     {
-        $response = $this->getNews($search);
+        parent::__construct("https://content.guardianapis.com/search", [
+            'api-key' => env('GUARDIAN_API_KEY'),
+            'q' => $search,
+            'query-fields' => 'headline,body',
+            'show-fields' => 'headline,thumbnail,body',
+            'show-tags' => 'contributor'
+        ]);
+        $this->search = $search;
+    }
+    public function transformNews(): array
+    {
+        $response = $this->getNews($this->search);
         $results = $response['response']['results'];
         $news = collect($results)->map(fn ($result) => [
             "title" => $result['fields']['headline'],
@@ -21,6 +35,8 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
             "thumbnail" => $result['fields']['thumbnail'],
             "author" => $result['tags'][0]['webTitle'],
             "date" => $result['webPublicationDate'],
+            "category" => $result['sectionName'],
+            "source" => "The Guardian"
         ]);
         return $news->toArray();
     }
