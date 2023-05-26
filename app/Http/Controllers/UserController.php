@@ -22,14 +22,19 @@ class UserController extends Controller
                 Response::HTTP_UNAUTHORIZED
             );
         }
-
         $user = Auth::user();
 
         $token = $user->createToken('token')->plainTextToken;
 
         $cookie = cookie('_token', $token, 60 * 5); // 5 hours
 
-        return Http::success($user)->withCookie($cookie);
+        return Http::success(null)->withCookie($cookie);
+    }
+
+    public function account(): response
+    {
+        $user = Auth::user();
+        return Http::success($user);
     }
 
     public function logout(): response

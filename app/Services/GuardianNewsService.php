@@ -13,6 +13,7 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
 {
 
     private String $search;
+    private $count = 0;
 
     public function __construct(String $search)
     {
@@ -20,7 +21,7 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
             'api-key' => env('GUARDIAN_API_KEY'),
             'q' => $search,
             'page-size' => '10',
-            "sort-by" => 'relevance',
+            "order-by" => 'newest',
             'query-fields' => 'headline,body',
             'show-fields' => 'headline,thumbnail,body',
             'show-tags' => 'contributor'
@@ -31,15 +32,19 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
     {
         $response = $this->getNews($this->search);
         $results = $response['response']['results'];
-        $news = collect($results)->map(fn ($result) => [
-            "title" => $result['fields']['headline'],
-            "body" => $result['fields']['body'],
-            "thumbnail" => $result['fields']['thumbnail'],
-            "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
-            "date" => $result['webPublicationDate'],
-            "category" => $result['sectionName'],
-            "source" => "The Guardian"
-        ]);
+        $news = collect($results)->map(function ($result) {
+            $this->count += 1;
+            return  [
+                'id' => $this->count . 'g',
+                "title" => $result['fields']['headline'],
+                "body" => $result['fields']['body'],
+                "thumbnail" => $result['fields'] && array_key_exists('thumbnail', $result['fields']) ? $result['fields']['thumbnail'] : null,
+                "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
+                "date" => $result['webPublicationDate'],
+                "category" => $result['sectionName'],
+                "source" => "Guardian News"
+            ];
+        });
         return $news->toArray();
     }
 }
