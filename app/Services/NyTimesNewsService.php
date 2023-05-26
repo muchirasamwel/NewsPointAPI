@@ -12,7 +12,7 @@ class NyTimesNewsService extends NewsService implements NewsTransformInterface
 
     public function __construct(String $search)
     {
-        parent::__construct("https://api.nytimes.com/svc/search/v2/articlesearch.json", [
+        parent::__construct(env('NYTIMES_NEWS_URL'), [
             "api-key" => env("NYTIMES_API_KEY"),
             "q" => $search,
             "sort" => "newest",

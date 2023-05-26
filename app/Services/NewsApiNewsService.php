@@ -14,7 +14,7 @@ class NewsApiNewsService extends NewsService implements NewsTransformInterface
 
     public function __construct(String $search, array $sources = [])
     {
-        parent::__construct("https://newsapi.org/v2/everything", [
+        parent::__construct(env('NEWSAPI_NEWS_URL'), [
             "apiKey" => env("NEWSAPI_API_KEY"),
             "q" => $search,
             "searchIn" => "title,content",
