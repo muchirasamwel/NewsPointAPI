@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // User APIs
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users', [UserController::class, 'update']);
+    Route::get('/account', [UserController::class, 'account']);
     Route::post('/logout', [UserController::class, 'logout']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::put('/user-preferences', [UserPreferencesController::class, 'update']);

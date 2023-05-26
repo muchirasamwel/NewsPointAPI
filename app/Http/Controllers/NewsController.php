@@ -20,10 +20,14 @@ class NewsController extends Controller
         $nYTimesNews = $this->getNyTimesNews($search ?? '');
 
         return Http::success([
-            "guardianNews" => $guardianNews,
-            'newsAPINews' => $newsAPINews,
-            'nYTimesNews' => $nYTimesNews
+            ...$guardianNews, ...$newsAPINews, ...$nYTimesNews
         ]);
+
+        // return Http::success([
+        //     "guardianNews" => $guardianNews,
+        //     'newsAPINews' => $newsAPINews,
+        //     'nYTimesNews' => $nYTimesNews
+        // ]);
     }
 
     private function getGuardianNews(String $search): array

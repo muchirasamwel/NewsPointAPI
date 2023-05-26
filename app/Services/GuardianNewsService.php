@@ -13,6 +13,7 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
 {
 
     private String $search;
+    private $count = 0;
 
     public function __construct(String $search)
     {
@@ -31,15 +32,19 @@ class GuardianNewsService extends NewsService implements NewsTransformInterface
     {
         $response = $this->getNews($this->search);
         $results = $response['response']['results'];
-        $news = collect($results)->map(fn ($result) => [
-            "title" => $result['fields']['headline'],
-            "body" => $result['fields']['body'],
-            "thumbnail" => $result['fields'] && array_key_exists('thumbnail', $result['fields']) ? $result['fields']['thumbnail'] : null,
-            "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
-            "date" => $result['webPublicationDate'],
-            "category" => $result['sectionName'],
-            "source" => "Guardian News"
-        ]);
+        $news = collect($results)->map(function ($result) {
+            $this->count += 1;
+            return  [
+                'id' => $this->count . 'g',
+                "title" => $result['fields']['headline'],
+                "body" => $result['fields']['body'],
+                "thumbnail" => $result['fields'] && array_key_exists('thumbnail', $result['fields']) ? $result['fields']['thumbnail'] : null,
+                "author" => $result['tags'] && $result['tags'][0] ? $result['tags'][0]['webTitle'] : null,
+                "date" => $result['webPublicationDate'],
+                "category" => $result['sectionName'],
+                "source" => "Guardian News"
+            ];
+        });
         return $news->toArray();
     }
 }

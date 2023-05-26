@@ -19,7 +19,7 @@ class UserPreferencesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|numeric',
+            // 'user_id' => 'required|numeric',
             'user_preferences' => 'required|array'
         ];
     }

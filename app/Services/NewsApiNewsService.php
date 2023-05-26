@@ -3,11 +3,14 @@
 namespace App\Services;
 
 use App\Interfaces\NewsTransformInterface;
+use Ramsey\Uuid\Type\Integer;
 
 class NewsApiNewsService extends NewsService implements NewsTransformInterface
 {
 
     private String $search;
+
+    private $count = 0;
 
     public function __construct(String $search, array $sources = [])
     {
@@ -17,7 +20,7 @@ class NewsApiNewsService extends NewsService implements NewsTransformInterface
             "searchIn" => "title,content",
             "sortBy" => "publishedAt",
             "sources" => join(',', $sources),
-            "pageSize" => "15",
+            "pageSize" => "20",
         ]);
         $this->search = $search;
     }
@@ -26,15 +29,19 @@ class NewsApiNewsService extends NewsService implements NewsTransformInterface
         $response = $this->getNews($this->search);
         $results = $response["articles"];
 
-        $news = collect($results)->map(fn ($result) => [
-            "title" => $result["title"],
-            "body" => $result["content"],
-            "thumbnail" => $result["urlToImage"],
-            "author" => $result["author"],
-            "date" => $result["publishedAt"],
-            "category" => null,
-            "source" => $result["source"] ? $result["source"]["name"] : null
-        ]);
+        $news = collect($results)->map(function ($result) {
+            $this->count += 1;
+            return [
+                "id" => $this->count . 'a',
+                "title" => $result["title"],
+                "body" => $result["content"],
+                "thumbnail" => $result["urlToImage"],
+                "author" => $result["author"],
+                "date" => $result["publishedAt"],
+                "category" => null,
+                "source" => $result["source"] ? $result["source"]["name"] : null
+            ];
+        });
         return $news->toArray();
     }
 }
